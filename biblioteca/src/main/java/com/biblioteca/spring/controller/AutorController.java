@@ -14,11 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.biblioteca.spring.modelo.Autor;
-import com.biblioteca.spring.modelo.Libro;
 import com.biblioteca.spring.repository.AutorRepository;
-import com.biblioteca.spring.repository.LibroRepository;
-
-
 
 @Controller
 @RequestMapping("/autor")
@@ -26,55 +22,44 @@ public class AutorController {
 
 	@Autowired
 	AutorRepository autorRepository;
-	
-	@Autowired
-	LibroRepository libroRepository;
-	
+
 	@GetMapping("/nuevo")
-	public String autorNuevo(Autor autor, Model modelo) {
-		List<Libro> libros = libroRepository.findAll();
-		modelo.addAttribute("libros", libros);
+	public String autorNuevo(Autor autor) {
 		return "autor/form";
 	}
-	
-	@GetMapping("/editar/{autorId}")
-	public String autorEditar(@PathVariable int autorId, Model modelo) {
-		Autor autor = autorRepository.findById(autorId);
-		modelo.addAttribute("autor", autor);
-		List<Libro> libros = libroRepository.findAll();
-		modelo.addAttribute("libros", libros);
+
+	@GetMapping("/editar/{id}")
+	public String autorEditar(@PathVariable Long id, Model modelo) {
+		Autor autores = autorRepository.findById(id);
+		modelo.addAttribute("autor", autores);
 		return "autor/form";
 	}
-	
-	@GetMapping("/eliminar/{autorId}")
-	public String alumnoEliminar(@PathVariable int autorId) {
-		autorRepository.delete(autorId);
-		return "redirect:/autor/listado";
+
+	@GetMapping("/eliminar/{id}")
+	public String autorEliminar(@PathVariable Long id) {
+		autorRepository.delete(id);
+		return "redirect:/autor/listar";
 	}
-	
-	@GetMapping("/listado")
+
+	@GetMapping("/listar")
 	public String autorListado(Model modelo) {
 		List<Autor> autores = autorRepository.findAll();
-		modelo.addAttribute("autores", autores);
-		return "autor/listado";
+		modelo.addAttribute("autor", autores);
+		return "autor/listar";
 	}
-	
+
 	@PostMapping("/procesar")
 	public String autorProcesar(@Valid Autor autor, BindingResult informeValidacion) {
-		
-		if( informeValidacion.hasErrors() ) {
+		if (informeValidacion.hasErrors()) {
 			return "autor/form";
 		}
-		
-		if( autor.getId() > 0) {
-			autorRepository.edit(autor);
+
+		if (autor.getId() == null || autor.getId() == 0) {
+			autorRepository.create(autor);
 		} else {
-			autorRepository.create(autor);	
+			autorRepository.edit(autor);
 		}
-		return "redirect:/autor/listado";
+		return "redirect:/autor/listar";
 	}
-	
-	
-	
-	
+
 }

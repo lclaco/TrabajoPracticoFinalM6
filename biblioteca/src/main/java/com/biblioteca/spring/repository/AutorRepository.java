@@ -5,11 +5,10 @@ import java.util.List;
 import com.biblioteca.spring.modelo.Autor;
 
 public interface AutorRepository {
-
 	
 	public List<Autor> findAll();
-	public Autor findById(int id);
+	public Autor findById(Long id);
 	public void create(Autor autor);
 	public void edit(Autor autor);
-	public void delete(int id);
+	public void delete(Long id);
 }

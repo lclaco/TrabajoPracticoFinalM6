@@ -11,40 +11,39 @@ public class Libro {
 	private Long id;
 	@Size(min =3, max = 50)
 	private String titulo;
-	@Size(min =3, max = 20)
-	private String autor;
-	@Size(min =3, max = 20)
+	@Size(min =3, max = 20)	
 	private String edicion;
 	@Size(min =3, max = 100)
 	private String editorial;
-	@Min(value = 0, message="el valor no puede ser 0")
-	private LocalDate año;
+	//@Past() buscar para validar fechas
+	private LocalDate ano;
+	private Autor autor;
 	
 	public Libro() {
 		super();
 	}
 
-	public Libro(@Size(min = 3, max = 50) String titulo, @Size(min = 3, max = 20) String autor,
-			@Size(min = 3, max = 20) String edicion, @Size(min = 3, max = 100) String editorial,
-			@Min(value = 0, message = "el valor no puede ser 0") LocalDate año) {
+	public Libro(@Size(min = 3, max = 50) String titulo, @Size(min = 3, max = 20) String edicion,
+			@Size(min = 3, max = 100) String editorial,
+			@Min(value = 0, message = "el valor no puede ser 0") LocalDate ano, Autor autor) {
 		super();
 		this.titulo = titulo;
-		this.autor = autor;
 		this.edicion = edicion;
 		this.editorial = editorial;
-		this.año = año;
+		this.ano = ano;
+		this.autor = autor;
 	}
 
-	public Libro(@Min(0) Long id, @Size(min = 3, max = 50) String titulo, @Size(min = 3, max = 20) String autor,
-			@Size(min = 3, max = 20) String edicion, @Size(min = 3, max = 100) String editorial,
-			@Min(value = 0, message = "el valor no puede ser 0") LocalDate año) {
+	public Libro(@Min(0) Long id, @Size(min = 3, max = 50) String titulo, @Size(min = 3, max = 20) String edicion,
+			@Size(min = 3, max = 100) String editorial,
+			@Min(value = 0, message = "el valor no puede ser 0") LocalDate ano, Autor autor) {
 		super();
 		this.id = id;
 		this.titulo = titulo;
-		this.autor = autor;
 		this.edicion = edicion;
 		this.editorial = editorial;
-		this.año = año;
+		this.ano = ano;
+		this.autor = autor;
 	}
 
 	public Long getId() {
@@ -63,14 +62,6 @@ public class Libro {
 		this.titulo = titulo;
 	}
 
-	public String getAutor() {
-		return autor;
-	}
-
-	public void setAutor(String autor) {
-		this.autor = autor;
-	}
-
 	public String getEdicion() {
 		return edicion;
 	}
@@ -87,14 +78,22 @@ public class Libro {
 		this.editorial = editorial;
 	}
 
-	public LocalDate getAño() {
-		return año;
+	public LocalDate getAno() {
+		return ano;
 	}
 
-	public void setAño(LocalDate año) {
-		this.año = año;
+	public void setAno(LocalDate ano) {
+		this.ano = ano;
 	}
-	
+
+	public Autor getAutor() {
+		return autor;
+	}
+
+	public void setAutor(Autor autor) {
+		this.autor = autor;
+	}
+
 	
 	
 }

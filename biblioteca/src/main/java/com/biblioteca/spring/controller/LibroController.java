@@ -13,58 +13,66 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.biblioteca.spring.modelo.Autor;
 import com.biblioteca.spring.modelo.Libro;
+import com.biblioteca.spring.repository.AutorRepository;
 import com.biblioteca.spring.repository.LibroRepository;
-
-
 
 @Controller
 @RequestMapping("/libro")
 public class LibroController {
 
-	
+	@Autowired
+	AutorRepository autorRepository;
+
 	@Autowired
 	LibroRepository libroRepository;
 	
-	@GetMapping("/nueva")
-	public String libroNuevo(Libro libro) {
+	
+	@GetMapping("/nuevo")
+	public String libroNuevo(Libro libro, Model modelo) {
+		List<Autor> autores = autorRepository.findAll();
+		modelo.addAttribute("autor", autores);
 		return "libro/form";
 	}
-	
+
 	@GetMapping("/editar/{id}")
-	public String autorEditar(@PathVariable int id, Model modelo) {
-		Libro libros = libroRepository.findById(id);
-		modelo.addAttribute("libros", libros);
+	public String libroEditar(@PathVariable Long id, Model modelo) {
+		Libro libro = libroRepository.findById(id);
+		List<Autor> autores = autorRepository.findAll();
+		modelo.addAttribute("autor", autores);		
+		modelo.addAttribute("libro", libro);
 		return "libro/form";
 	}
-	
+
 	@GetMapping("/eliminar/{id}")
-	public String alumnoEliminar(@PathVariable int id) {
+	public String libroEliminar(@PathVariable Long id) {
 		libroRepository.delete(id);
-		return "redirect:/libro/listado";
+		return "redirect:/libro/listar";
 	}
-	
-	@GetMapping("/listado")
-	public String alumnoListado(Model modelo) {
+
+	@GetMapping("/listar")
+	public String libroListado(Model modelo) {
 		List<Libro> libros = libroRepository.findAll();
-		modelo.addAttribute("libros", libros);
-		return "libro/listado";
+		modelo.addAttribute("libro", libros);
+		return "libro/listar";
 	}
-	
+
 	@PostMapping("/procesar")
-	public String carreraProcesar(@Valid Libro libro, BindingResult informeValidacion) {
-		if( informeValidacion.hasErrors() ) {
+	public String libroProcesar(@Valid Libro libro, BindingResult informeValidacion, Model modelo) {
+		
+		
+		if (informeValidacion.hasErrors()) {
+			List<Autor> autores = autorRepository.findAll();
+			modelo.addAttribute("autor", autores);
 			return "libro/form";
 		}
-		
-		if( libro.getId() > 0) {
-			libroRepository.edit(libro);
+		if (libro.getId() == null || libro.getId() == 0 ) {
+			libroRepository.create(libro);
 		} else {
-			libroRepository.create(libro);	
+			libroRepository.edit(libro);
 		}
-		return "redirect:/carrera/listado";
+		return "redirect:/libro/listar";
 	}
-	
-	
-	
+
 }
